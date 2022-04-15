@@ -18,6 +18,14 @@ def die(s)
   exit 1
 end
 
+def quote(s)
+  if s.match /\A\w+\z/
+    s
+  else
+    JSON.generate(s)
+  end
+end
+
 input = ARGV[0]
 die "usage #{$0} <json file>" unless input
 
@@ -33,6 +41,9 @@ while true
     
     key = @prompt.select("Choose a key:", keys, filter: true, show_help: 'always')
     break if key == StopOption
+
+    key = quote(key)
+
     @cmd += ".#{key}"
     json = json[key]
     next
